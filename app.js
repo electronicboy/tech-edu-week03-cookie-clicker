@@ -129,7 +129,7 @@ function doTickLoop() {
     giveCookie();
     updateUI();
 
-    if (tick % (TICK_RATE * 5) === 0) {
+    if (tick % (TICK_RATE) === 0) {
         savePlayerData()
     }
     tick++
