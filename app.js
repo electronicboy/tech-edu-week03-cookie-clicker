@@ -116,9 +116,17 @@ function updateCPS() {
 
 let tick = 0;
 
+function giveCookie() {
+    gameState.cookies += (cachedCPS / TICK_RATE);
+}
+
+document.getElementById('cookie').addEventListener('click', () => {
+    giveCookie()
+})
+
 function doTickLoop() {
     if (tornDown) return // torn down? bail out
-    gameState.cookies += (cachedCPS / TICK_RATE);
+    giveCookie();
     updateUI();
 
     if (tick % (TICK_RATE * 5) === 0) {
