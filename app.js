@@ -122,6 +122,8 @@ function giveCookie() {
 
 document.getElementById('cookie').addEventListener('click', () => {
     giveCookie()
+    const audioCtx = new Audio("./assets/ui-click-97915.mp3");
+    audioCtx.play()
 })
 
 function doTickLoop() {
