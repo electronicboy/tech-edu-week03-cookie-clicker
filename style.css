@@ -1,7 +1,65 @@
-.cookie > img{
-    max-height: 120px;
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
-.pageContainer {
+
+/*******************
+  PAGE LAYOUT
+ *******************/
+.pageContainer > h1{
+    text-align: center;
+}
+
+.gameContainer {
     display: flex;
+    justify-content: space-around;
+}
+
+.upgradeItemHeader {
+    display: grid;
+    grid-template-columns: 2fr  1fr 1fr 1fr;
+    grid-gap: 1rem;
+    margin: 3px;
+}
+
+.upgradeItem {
+    display: grid;
+    grid-template-columns: 2fr  1fr 1fr 1fr;
+    grid-gap: 1rem;
+    margin: 3px;
+}
+.upgradeItem > * {
+    /*margin-right: 10px;*/
+    /*margin-left: 10px;*/
+}
+
+.cookie > img{
+    max-height: 240px;
+    animation: cookie 4s linear infinite;
+}
+
+@keyframes cookie {
+    from {
+        transform: rotate(0deg)
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* https://unused-css.com/blog/css-shake-animation/ */
+@-webkit-keyframes shaker {
+    0% { transform: translate(2px, 0); }
+    50% { transform: translate(-2px, 0); }
+    100% { transform: translate(2px, 0); }
+}
+
+.shake {
+    -webkit-animation-name: shaker;
+    -webkit-animation-duration: 0.1s;
+    -webkit-transform-origin:50% 50%;
+    -webkit-animation-timing-function: linear;
+    background-color: #c0392b;
 }

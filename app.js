@@ -1,18 +1,26 @@
 const UPGRADE_API = "https://cookie-upgrade-api.vercel.app/api/upgrades"
 
-const TICK_RATE = 1;
+const TICK_RATE = 10;
 
-let townDown = false;
+let tornDown = false;
 /**
  * @type {{cookies: number, upgrades: []}}
  */
-let gameState = {}
+let gameState = {
+    cookies: 0, upgrades: []
+}
 
 /**
  *
  * @type {[{id: number, name: string, cost: number, increase: number}]}
  */
 let upgrades = null;
+/**
+ *
+ * @type {HTMLButtonElement[]}
+ */
+let upgradesButton = []
+
 /** @type {number} */
 let cachedCPS = -1;
 
@@ -26,7 +34,7 @@ let cachedCPS = -1;
  * @param wasReadingSaveData {boolean}
  */
 function teardown(error, wasReadingSaveData) {
-    townDown = true;
+    tornDown = true;
     let containerElement = document.body;
     for (let child of containerElement.children) {
         child.remove()
@@ -104,20 +112,35 @@ function updateCPS() {
         }
     }
     cachedCPS = cps;
-
 }
 
+let tick = 0;
 
 function doTickLoop() {
+    if (tornDown) return // torn down? bail out
+    gameState.cookies += (cachedCPS / TICK_RATE);
+    updateUI();
+
+    if (tick % (TICK_RATE * 5) === 0) {
+        savePlayerData()
+    }
+    tick++
+}
+
+const cookieCPSDisplay = document.getElementById('cookie-cps');
+const cookieDisplay = document.getElementById('cookie-display');
+
+function updateUI() {
+    cookieCPSDisplay.textContent = Math.floor(cachedCPS).toString(10);
+    cookieDisplay.textContent = Math.floor(gameState.cookies).toString(10);
 
 }
 
 
 fetchUpgrades().then(fetchedUpgrades => {
-    if (townDown) return; // Safeguard, don't do anything if we've been torndown!
+    if (tornDown) return; // Safeguard, don't do anything if we've been torndown!
     if (fetchedUpgrades !== null) {
         upgrades = fetchedUpgrades;
-        console.log(upgrades);
         try {
             const loadedPlayerData = loadPlayerData()
             if (loadedPlayerData != null) {
@@ -126,9 +149,86 @@ fetchUpgrades().then(fetchedUpgrades => {
             // We have got everything loaded, time to bootstrap and init the loop!
             setInterval(doTickLoop, 1000 / TICK_RATE)
             updateCPS();
+            generateUpdateUI();
         } catch (e) {
             teardown(e, true);
             return
         }
     }
 })
+
+// https://stackoverflow.com/questions/38045560/animate-css-shake-effect-not-working-every-time
+/**
+ *
+ * @param button {HTMLButtonElement}
+ */
+function shakeButton(button) {
+    console.log('Shaking button')
+    button.classList.add("shake");
+    setTimeout(() => {
+        button.classList.remove("shake");
+    }, 1000);
+}
+
+
+function generateUpdateUI() {
+    let upgradesElement = document.getElementById('upgrades');
+    let upgradeHeaderElement = document.createElement('div');
+    upgradeHeaderElement.classList.add('upgradeItemHeader');
+    for (let header of ["Upgrade", "increase", "owned", "buy"]) {
+        let headerItemElement = document.createElement('span');
+        headerItemElement.textContent = header;
+        upgradeHeaderElement.appendChild(headerItemElement);
+    }
+    upgradesElement.appendChild(upgradeHeaderElement);
+    for (let upgrade of upgrades) {
+        const upgradeDiv = document.createElement('div');
+        upgradeDiv.classList.add('upgradeItem');
+
+        const nameElement = document.createElement('span');
+        nameElement.textContent = upgrade.name;
+
+        const increaseInfoElement = document.createElement('span');
+        increaseInfoElement.textContent = upgrade.increase;
+
+        const buyButtonElement = document.createElement('button');
+        buyButtonElement.addEventListener('click', () => {
+            if (!handleUpgrade(upgrade)) {
+                shakeButton(buyButtonElement)
+            }
+
+        })
+        buyButtonElement.textContent = `Buy 🍪${upgrade.cost}`
+        upgradesButton[upgrade.id] = buyButtonElement;
+
+        upgradeDiv.appendChild(nameElement);
+        upgradeDiv.appendChild(increaseInfoElement);
+        upgradeDiv.appendChild(buyButtonElement);
+        upgradesElement.appendChild(upgradeDiv);
+
+    }
+}
+
+/**
+ *
+ * @param upgrade {{id: number, name: string, cost: number, increase: number}}
+ * @returns {boolean} if the upgrade was successful
+ */
+function handleUpgrade(upgrade) {
+    if (gameState.cookies >= upgrade.cost) {
+        gameState.cookies -= upgrade.cost;
+
+        let currentTier = gameState.upgrades[upgrade.id];
+        if (currentTier == null) {
+            currentTier = 0
+        }
+        currentTier++;
+        gameState.upgrades[upgrade.id] = currentTier;
+
+        updateCPS();
+        savePlayerData();
+        return true;
+    } else {
+        return false;
+    }
+}
