@@ -4,7 +4,7 @@ const TICK_RATE = 10;
 
 let tornDown = false;
 /**
- * @type {{cookies: number, upgrades: []}}
+ * @type {{cookies: number, upgrades: number[]}}
  */
 let gameState = {
     cookies: 0, upgrades: []
@@ -17,9 +17,9 @@ let gameState = {
 let upgrades = null;
 /**
  *
- * @type {HTMLButtonElement[]}
+ * @type {{button: HTMLButtonElement, ownInfo: HTMLSpanElement}[]}
  */
-let upgradesButton = []
+let storedUpgradeElements = []
 
 /** @type {number} */
 let cachedCPS = -1;
@@ -134,6 +134,19 @@ function updateUI() {
     cookieCPSDisplay.textContent = Math.floor(cachedCPS).toString(10);
     cookieDisplay.textContent = Math.floor(gameState.cookies).toString(10);
 
+    for (let upgrade of upgrades) {
+        const upgradeMeta = storedUpgradeElements[upgrade.id];
+        let currentTier = 0;
+        const upgradeState = gameState.upgrades[upgrade.id]
+        if (upgradeState) {
+            currentTier = upgradeState;
+        }
+        upgradeMeta.ownInfo.textContent = currentTier;
+
+        upgradeMeta.button.disabled = upgrade.cost > gameState.cookies
+
+    }
+
 }
 
 
@@ -190,6 +203,7 @@ function generateUpdateUI() {
 
         const increaseInfoElement = document.createElement('span');
         increaseInfoElement.textContent = upgrade.increase;
+        const ownedInfoElement = document.createElement('span');
 
         const buyButtonElement = document.createElement('button');
         buyButtonElement.addEventListener('click', () => {
@@ -199,10 +213,15 @@ function generateUpdateUI() {
 
         })
         buyButtonElement.textContent = `Buy 🍪${upgrade.cost}`
-        upgradesButton[upgrade.id] = buyButtonElement;
+        storedUpgradeElements[upgrade.id] = {
+            button: buyButtonElement,
+            ownInfo: ownedInfoElement
+
+        }
 
         upgradeDiv.appendChild(nameElement);
         upgradeDiv.appendChild(increaseInfoElement);
+        upgradeDiv.appendChild(ownedInfoElement);
         upgradeDiv.appendChild(buyButtonElement);
         upgradesElement.appendChild(upgradeDiv);
 
