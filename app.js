@@ -151,7 +151,11 @@ function updateUI() {
         }
         upgradeMeta.ownInfo.textContent = currentTier;
 
-        upgradeMeta.button.disabled = upgrade.cost > gameState.cookies
+            if (upgrade.cost > gameState.cookies) {
+                upgradeMeta.button.classList.add("disabled")
+            } else {
+                upgradeMeta.button.classList.remove("disabled")
+            }
 
     }
 
