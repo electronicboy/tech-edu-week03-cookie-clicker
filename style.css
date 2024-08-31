@@ -1,0 +1,7 @@
+.cookie > img{
+    max-height: 120px;
+}
+
+.pageContainer {
+    display: flex;
+}
