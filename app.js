@@ -260,6 +260,7 @@ function handleUpgrade(upgrade) {
 
         updateCPS();
         savePlayerData();
+        new Audio("./assets/cash-register-purchase-87313.mp3").play().catch((err) => {});
         return true;
     } else {
         return false;
