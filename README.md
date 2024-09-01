@@ -30,3 +30,10 @@ periodically so that we can load it back on reloading, and automatically increme
 
 I added some small amount of animation to the game for visuals and some small amount of feedback,
 such as shaking a button if a user tries to click it to upgrade when it's not available.
+
+# Reflection
+CSS is still an area in which I'm coming to grips with, while I find my that general programming
+skills are competent and allow me to pull of various things, I find that the concept of getting
+them onto the page and styling them feels like the biggest barrier. In part, that is somewhat
+down to me still learning how CSS works, but, also, some slight lack of faith in my ability to
+design something that I can put into action.
