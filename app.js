@@ -162,9 +162,29 @@ function doTickLoop() {
 const cookieCPSDisplay = document.getElementById('cookie-cps');
 const cookieDisplay = document.getElementById('cookie-display');
 const soundButton = document.getElementById('sounds');
+/** @type {HTMLDialogElement}*/
+const resetButton = document.getElementById('reset-game');
+const resetButtonYes = document.getElementById('reset-dialog-yes');
+const resetButtonNo = document.getElementById('reset-dialog-no');
+
+const resetDialog = document.getElementById('reset-dialog');
 
 soundButton.addEventListener('click', () => {
     setPlaySounds(!getPlaySounds());
+})
+
+resetButton.addEventListener('click', () => {
+    resetDialog.showModal();
+})
+
+resetButtonNo.addEventListener('click', () => {
+    resetDialog.close();
+})
+
+resetButtonYes.addEventListener('click', () => {
+    tornDown = true; // We don't expect this to be a factor, but, just in case.
+    removePlayerData()
+    location.reload();
 })
 
 function updateUI() {

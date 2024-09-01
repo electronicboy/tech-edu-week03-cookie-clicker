@@ -29,6 +29,13 @@ header {
     right: 1rem;
 }
 
+#reset-dialog {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    left: auto;
+}
+
 .gameContainer {
     display: flex;
     justify-content: space-around;
@@ -54,7 +61,7 @@ header {
  *******************/
 
 
-.cookie > img{
+.cookie > img {
     max-height: 240px;
     animation: cookie 4s linear infinite;
 }
@@ -74,15 +81,21 @@ header {
 
 /* https://unused-css.com/blog/css-shake-animation/ */
 @-webkit-keyframes shaker {
-    0% { transform: translate(2px, 0); }
-    50% { transform: translate(-2px, 0); }
-    100% { transform: translate(2px, 0); }
+    0% {
+        transform: translate(2px, 0);
+    }
+    50% {
+        transform: translate(-2px, 0);
+    }
+    100% {
+        transform: translate(2px, 0);
+    }
 }
 
 .shake {
     animation-name: shaker;
     animation-duration: 0.1s;
-    transform-origin:50% 50%;
+    transform-origin: 50% 50%;
     animation-timing-function: linear;
     background-color: #c0392b;
 }
