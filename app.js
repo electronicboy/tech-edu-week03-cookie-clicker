@@ -132,12 +132,15 @@ function updateCPS() {
 
 let tick = 0;
 
-function giveCookie() {
-    gameState.cookies += (cachedCPS / TICK_RATE);
+/**
+ * @param full {boolean} is this a full cookie or a tick?
+ */
+function giveCookie(full) {
+    gameState.cookies += full ? cachedCPS : (cachedCPS / TICK_RATE);
 }
 
 document.getElementById('cookie').addEventListener('click', () => {
-    giveCookie()
+    giveCookie(true)
     if (getPlaySounds()) {
         const audioCtx = new Audio("./assets/ui-click-97915.mp3");
         audioCtx.play().catch((err) => {})
@@ -146,7 +149,7 @@ document.getElementById('cookie').addEventListener('click', () => {
 
 function doTickLoop() {
     if (tornDown) return // torn down? bail out
-    giveCookie();
+    giveCookie(false);
     updateUI();
 
     if (tick % (TICK_RATE) === 0) {
