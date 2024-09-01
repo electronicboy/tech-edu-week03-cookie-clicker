@@ -17,9 +17,16 @@
   PAGE LAYOUT
  *******************/
 header {
+    position: relative;
     text-align: center;
     font-family: "Sevillana", cursive;
     padding-bottom: 2rem;
+}
+
+.quickMenu {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
 }
 
 .gameContainer {
@@ -91,7 +98,7 @@ body {
 }
 
 button {
-    background-color: rgb(218, 0, 0);
+    background-color: rgb(165, 0, 0);
     border-color: rgb(170, 27, 222);
     border-width: 3px;
     padding: 3px;

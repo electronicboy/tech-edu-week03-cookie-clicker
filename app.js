@@ -18,6 +18,7 @@ function getPlaySounds() {
 function setPlaySounds(play) {
     gameState.sounds = play;
 }
+
 /**
  *
  * @type {[{id: number, name: string, cost: number, increase: number}]}
@@ -91,6 +92,10 @@ function loadPlayerData() {
     return null;
 }
 
+/****************************
+ Upgrades
+ *****************************/
+
 /**
  * @return {Promise<[{id: number, name: string, cost: number, increase: number}]>}
  */
@@ -109,6 +114,9 @@ async function fetchUpgrades() {
     });
 }
 
+/****************************
+ Game State
+ *****************************/
 function updateCPS() {
     let cps = 1;
     if (gameState.upgrades != null) {
@@ -130,8 +138,10 @@ function giveCookie() {
 
 document.getElementById('cookie').addEventListener('click', () => {
     giveCookie()
-    const audioCtx = new Audio("./assets/ui-click-97915.mp3");
-    audioCtx.play()
+    if (getPlaySounds()) {
+        const audioCtx = new Audio("./assets/ui-click-97915.mp3");
+        audioCtx.play().catch((err) => {})
+    }
 })
 
 function doTickLoop() {
@@ -145,12 +155,22 @@ function doTickLoop() {
     tick++
 }
 
+/****************************
+ UI
+ *****************************/
+
 const cookieCPSDisplay = document.getElementById('cookie-cps');
 const cookieDisplay = document.getElementById('cookie-display');
+const soundButton = document.getElementById('sounds');
+
+soundButton.addEventListener('click', () => {
+    setPlaySounds(!getPlaySounds());
+})
 
 function updateUI() {
     cookieCPSDisplay.textContent = Math.floor(cachedCPS).toString(10);
     cookieDisplay.textContent = Math.floor(gameState.cookies).toString(10);
+    soundButton.textContent = getPlaySounds() ? "🔊" : "🔇"
 
     for (let upgrade of upgrades) {
         const upgradeMeta = storedUpgradeElements[upgrade.id];
@@ -161,36 +181,15 @@ function updateUI() {
         }
         upgradeMeta.ownInfo.textContent = currentTier;
 
-            if (upgrade.cost > gameState.cookies) {
-                upgradeMeta.button.classList.add("disabled")
-            } else {
-                upgradeMeta.button.classList.remove("disabled")
-            }
+        if (upgrade.cost > gameState.cookies) {
+            upgradeMeta.button.classList.add("disabled")
+        } else {
+            upgradeMeta.button.classList.remove("disabled")
+        }
 
     }
 
 }
-
-
-fetchUpgrades().then(fetchedUpgrades => {
-    if (tornDown) return; // Safeguard, don't do anything if we've been torndown!
-    if (fetchedUpgrades !== null) {
-        upgrades = fetchedUpgrades;
-        try {
-            const loadedPlayerData = loadPlayerData()
-            if (loadedPlayerData != null) {
-                gameState = loadedPlayerData;
-            }
-            // We have got everything loaded, time to bootstrap and init the loop!
-            setInterval(doTickLoop, 1000 / TICK_RATE)
-            updateCPS();
-            generateUpdateUI();
-        } catch (e) {
-            teardown(e, true);
-            return
-        }
-    }
-})
 
 // https://stackoverflow.com/questions/38045560/animate-css-shake-effect-not-working-every-time
 /**
@@ -198,7 +197,6 @@ fetchUpgrades().then(fetchedUpgrades => {
  * @param button {HTMLButtonElement}
  */
 function shakeButton(button) {
-    console.log('Shaking button')
     button.classList.add("shake");
     setTimeout(() => {
         button.classList.remove("shake");
@@ -250,6 +248,32 @@ function generateUpdateUI() {
     }
 }
 
+
+/****************************
+ Here we go!
+ *****************************/
+
+fetchUpgrades().then(fetchedUpgrades => {
+    if (tornDown) return; // Safeguard, don't do anything if we've been torndown!
+    if (fetchedUpgrades !== null) {
+        upgrades = fetchedUpgrades;
+        try {
+            const loadedPlayerData = loadPlayerData()
+            if (loadedPlayerData != null) {
+                gameState = loadedPlayerData;
+            }
+            // We have got everything loaded, time to bootstrap and init the loop!
+            setInterval(doTickLoop, 1000 / TICK_RATE)
+            updateCPS();
+            generateUpdateUI();
+        } catch (e) {
+            teardown(e, true);
+            return
+        }
+    }
+})
+
+
 /**
  *
  * @param upgrade {{id: number, name: string, cost: number, increase: number}}
@@ -268,7 +292,10 @@ function handleUpgrade(upgrade) {
 
         updateCPS();
         savePlayerData();
-        new Audio("./assets/cash-register-purchase-87313.mp3").play().catch((err) => {});
+        if (getPlaySounds()) {
+            new Audio("./assets/cash-register-purchase-87313.mp3").play().catch((err) => {
+            });
+        }
         return true;
     } else {
         return false;
