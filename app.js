@@ -7,9 +7,17 @@ let tornDown = false;
  * @type {{cookies: number, upgrades: number[]}}
  */
 let gameState = {
-    cookies: 0, upgrades: []
+    cookies: 0, upgrades: [], sounds: true
 }
 
+
+function getPlaySounds() {
+    return gameState.sounds !== undefined ? gameState.sounds : true;
+}
+
+function setPlaySounds(play) {
+    gameState.sounds = play;
+}
 /**
  *
  * @type {[{id: number, name: string, cost: number, increase: number}]}

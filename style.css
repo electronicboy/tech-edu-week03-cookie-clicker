@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Sevillana&display=swap');
+
 * {
     box-sizing: border-box;
     margin: 0;
@@ -11,18 +13,12 @@
     border-color: rgba(118, 118, 118, 0.3);
 }
 
-/*@media (prefers-color-scheme: dark) {*/
-/*    background-color: rgba(19, 1, 1, 0.3);*/
-/*    color: rgba(255, 255, 255, 0.3);*/
-/*    border-color: rgba(195, 195, 195, 0.3)*/
-/*}*/
-
-
 /*******************
   PAGE LAYOUT
  *******************/
-.pageContainer > h1{
+header {
     text-align: center;
+    font-family: "Sevillana", cursive;
 }
 
 .gameContainer {
@@ -43,10 +39,12 @@
     grid-gap: 1rem;
     margin: 3px;
 }
-.upgradeItem > * {
-    /*margin-right: 10px;*/
-    /*margin-left: 10px;*/
-}
+
+
+/*******************
+  Cookie
+ *******************/
+
 
 .cookie > img{
     max-height: 240px;
@@ -62,6 +60,10 @@
     }
 }
 
+/*******************
+  Shakey shake
+ *******************/
+
 /* https://unused-css.com/blog/css-shake-animation/ */
 @-webkit-keyframes shaker {
     0% { transform: translate(2px, 0); }
@@ -70,9 +72,26 @@
 }
 
 .shake {
-    -webkit-animation-name: shaker;
-    -webkit-animation-duration: 0.1s;
-    -webkit-transform-origin:50% 50%;
-    -webkit-animation-timing-function: linear;
+    animation-name: shaker;
+    animation-duration: 0.1s;
+    transform-origin:50% 50%;
+    animation-timing-function: linear;
     background-color: #c0392b;
+}
+
+/*******************
+  PRETTI
+ *******************/
+
+body {
+    background-color: rgb(218, 0, 0);
+    color: rgb(243, 176, 0);
+    font-size: 1.1rem;
+}
+
+button {
+    background-color: rgb(218, 0, 0);
+    border-color: rgb(170, 27, 222);
+    border-width: 3px;
+    padding: 3px;
 }
