@@ -19,6 +19,7 @@
 header {
     text-align: center;
     font-family: "Sevillana", cursive;
+    padding-bottom: 2rem;
 }
 
 .gameContainer {
@@ -84,7 +85,7 @@ header {
  *******************/
 
 body {
-    background-color: rgb(218, 0, 0);
+    background-color: rgb(170, 6, 6);
     color: rgb(243, 176, 0);
     font-size: 1.1rem;
 }
